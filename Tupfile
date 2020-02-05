@@ -1,0 +1,26 @@
+TOOLS = @(ANDROID)/sdk/build-tools/@(BUILD_TOOLS_VERSION)
+GLUE = @(ANDROID)/sdk/ndk-bundle/sources/android/native_app_glue
+JAR = @(ANDROID)/sdk/platforms/android-@(API_VERSION)/android.jar
+JAVA = org/lovr/mini
+
+VRAPI_LIB = @(VRAPI)/Libs/Android/@(ABI)/Debug
+
+CC = @(ANDROID)/sdk/ndk-bundle/toolchains/llvm/prebuilt/@(HOST_TAG)/bin/clang
+
+CFLAGS += --target=@(TARGET)
+CFLAGS += -shared
+CFLAGS += -llog
+CFLAGS += -landroid
+CFLAGS += -lvrapi
+CFLAGS += -L$(VRAPI_LIB)
+CFLAGS += -I@(VRAPI)/Include
+CFLAGS += -I$(GLUE)
+
+: main.c |> $(CC) $(CFLAGS) %f $(GLUE)/android_native_app_glue.c -o %o |> lib/@(ABI)/libapp.so
+: $(JAVA)/LoadLibraries.java |> javac -classpath $(JAR) %f |> $(JAVA)/LoadLibraries.class
+: $(JAVA)/LoadLibraries.class |> dx --dex --output=%o %f |> classes.dex
+
+: |> cp $(VRAPI_LIB)/libvrapi.so %o |> lib/@(ABI)/libvrapi.so
+: AndroidManifest.xml | lib/@(ABI)/lib*.so classes.dex |> aapt package -M %f -I $(JAR) -F %o && aapt add -f %o lib/@(ABI)/* classes.dex |> tmp/app.unaligned.apk
+: tmp/app.unaligned.apk |> $(TOOLS)/zipalign -f 4 %f %o |> tmp/app.unsigned.apk
+: tmp/app.unsigned.apk |> $(TOOLS)/apksigner sign --ks @(KEYSTORE) --ks-pass @(KEYSTORE_PASS) --out %o %f |> app.apk

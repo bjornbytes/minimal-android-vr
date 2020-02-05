@@ -1,0 +1,7 @@
+.tup
+lib
+tmp
+*.class
+*.jks
+*.apk
+classes.dex
