@@ -4,12 +4,13 @@ Minimal Android VR
 A tiny test app for running C code on an Oculus Android VR device.  Used for doing quick experiments
 or generating minimal test cases for bug reports.
 
-It doesn't use gradle or Android Studio, instead it is built with command line tools and tup is used
-to automate some things.
+It doesn't use gradle or Android Studio, instead it is built with command line tools and tup or cmake 
+is used to automate some things.
 
-Not guaranteed to be fit for any purpose at all, this is just for personal use.
+Used to prototype how we could build Lovr in the future, but it's unclear yet if this is a good
+approach. YMMW.
 
-Usage
+Usage (Tup)
 ---
 
 ### Requirements
@@ -35,4 +36,40 @@ usually run the following command to build, install, and tail logs in one step:
 
 ```sh
 tup && adb install -r app.apk && adb logcat -s APP
+```
+
+Usage (CMake)
+----
+
+### Requirements
+
+- cmake
+- Android SDK and NDK (I don't know which versions will work)
+
+### Setup
+
+#### Windows
+
+- mingw bash
+- make
+
+1. `mkdir build; cd build; cmake -DCMAKE_TOOLCHAIN_FILE=$HOME/AppData/Local/Android/Sdk/ndk-bundle/build/cmake/android.toolchain.cmake -DANDROID_ABI=arm64-v8a -G "Unix Makefiles" ..`
+
+#### MacOS
+
+- Xcode (or at least commandline developer tools)
+
+1. `mkdir build; cd build; cmake -DCMAKE_TOOLCHAIN_FILE=$HOME/Library/Android/Sdk/ndk-bundle/build/cmake/android.toolchain.cmake -DANDROID_ABI=arm64-v8a -G "Unix Makefiles" ..`
+
+### Building
+
+1. `make MinimalAndroidVR`
+
+### Deploying
+
+Make outputs a `MinimalAndroidVR.apk` file.  You can use `adb install MinimalAndroidVR.apk` to install it to the device.  I
+usually run the following command to build, install, and tail logs in one step:
+
+```sh
+make MinimalAndroidVR && adb install -r MinimalAndroidVR.apk && adb logcat -s APP
 ```

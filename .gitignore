@@ -5,3 +5,4 @@ tmp
 *.jks
 *.apk
 classes.dex
+build
