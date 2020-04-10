@@ -52,14 +52,15 @@ Usage (CMake)
 
 - mingw bash
 - make
+- Android Studio
 
-1. `mkdir build; cd build; cmake -DCMAKE_TOOLCHAIN_FILE=$HOME/AppData/Local/Android/Sdk/ndk-bundle/build/cmake/android.toolchain.cmake -DANDROID_ABI=arm64-v8a -G "Unix Makefiles" ..`
+1. `mkdir build; cd build; cmake -DCMAKE_TOOLCHAIN_FILE=$HOME/AppData/Local/Android/Sdk/ndk-bundle/build/cmake/android.toolchain.cmake -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=29 -DJAVA_HOME="C:/Program Files/Android/Android Studio/jre" -G "Unix Makefiles" ..`
 
 #### MacOS
 
 - Xcode (or at least commandline developer tools)
 
-1. `mkdir build; cd build; cmake -DCMAKE_TOOLCHAIN_FILE=$HOME/Library/Android/Sdk/ndk-bundle/build/cmake/android.toolchain.cmake -DANDROID_ABI=arm64-v8a -G "Unix Makefiles" ..`
+1. `mkdir build; cd build; cmake -DCMAKE_TOOLCHAIN_FILE=$HOME/Library/Android/Sdk/ndk-bundle/build/cmake/android.toolchain.cmake -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=29 -G "Unix Makefiles" ..`
 
 ### Building
 
