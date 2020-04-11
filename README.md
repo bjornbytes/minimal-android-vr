@@ -55,7 +55,7 @@ Usage (CMake)
 - make
 - Android Studio
 
-1. `mkdir build; cd build; cmake -DCMAKE_TOOLCHAIN_FILE=$HOME/AppData/Local/Android/Sdk/ndk-bundle/build/cmake/android.toolchain.cmake -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=29 -DJAVA_HOME="C:/Program Files/Android/Android Studio/jre" -G "Unix Makefiles" ..`
+1. `mkdir build; cd build; cmake -DCMAKE_TOOLCHAIN_FILE=$HOME/AppData/Local/Android/Sdk/ndk-bundle/build/cmake/android.toolchain.cmake -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=29 -DJAVA_HOME="C:/Program Files/Android/Android Studio/jre" -DCMAKE_BUILD_TYPE=Debug -G "Unix Makefiles" ..`
 2. `make minimalvr`
 
 #### MacOS
