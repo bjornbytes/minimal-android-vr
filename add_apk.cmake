@@ -2,7 +2,7 @@ function(add_apk _TARGET_NAME)
 
     cmake_parse_arguments(_add_apk
       ""
-      "MANIFEST"
+      "MANIFEST;KEYSTORE;KEYSTORE_PASS;KEY_PASS"
       "SOURCES;RESOURCES;INCLUDE_JARS"
       ${ARGN}
     )
@@ -94,6 +94,33 @@ function(add_apk _TARGET_NAME)
         VERBATIM
     )
 
-    add_custom_target(${_TARGET_NAME} ALL DEPENDS ${_APK_BUILD_DIR}/${_TARGET_NAME}.unaligned.apk)
+    # Align apk into an unsigned apk
+    add_custom_command(
+        OUTPUT ${_APK_BUILD_DIR}/${_TARGET_NAME}.unsigned.apk
+        COMMAND ${ANDROID_ZIPALIGN} 
+            -f 4
+            ${_APK_BUILD_DIR}/${_TARGET_NAME}.unaligned.apk
+            ${_APK_BUILD_DIR}/${_TARGET_NAME}.unsigned.apk
+        DEPENDS ${_APK_BUILD_DIR}/${_TARGET_NAME}.unaligned.apk
+        COMMENT "Aligning APK for ${_TARGET_NAME}.apk"
+        VERBATIM
+    )
+
+    
+    # Sign apk
+    add_custom_command(
+        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${_TARGET_NAME}.apk
+        COMMAND ${ANDROID_APKSIGNER} sign
+            --ks ${_add_apk_KEYSTORE}
+            --ks-pass ${_add_apk_KEYSTORE_PASS}
+            --key-pass ${_add_apk_KEY_PASS}
+            --out ${CMAKE_CURRENT_BINARY_DIR}/${_TARGET_NAME}.apk
+            ${_APK_BUILD_DIR}/${_TARGET_NAME}.unsigned.apk
+        DEPENDS ${_APK_BUILD_DIR}/${_TARGET_NAME}.unsigned.apk
+        COMMENT "Signing APK for ${_TARGET_NAME}.apk"
+        VERBATIM
+    )
+
+    add_custom_target(${_TARGET_NAME} ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${_TARGET_NAME}.apk)
 
 endfunction()

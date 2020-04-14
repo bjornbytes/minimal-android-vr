@@ -48,6 +48,10 @@ Usage (CMake)
 
 ### Setup
 
+To generate a keystore, do this:
+`keytool -genkey -v -keystore YOURNAME-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias YOURNAME`
+
+
 #### Windows
 
 - cmake >= 3.18 (contains fix for USE_JAVA in mingw)
@@ -55,24 +59,42 @@ Usage (CMake)
 - make
 - Android Studio
 
-1. `mkdir build; cd build; cmake -DCMAKE_TOOLCHAIN_FILE=$HOME/AppData/Local/Android/Sdk/ndk-bundle/build/cmake/android.toolchain.cmake -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=29 -DANDROID_BUILD_TOOLS_VERSION=29.0.0 -DJAVA_HOME="C:/Program Files/Android/Android Studio/jre" -DCMAKE_BUILD_TYPE=Debug -G "Unix Makefiles" ..`
-2. `make minimalvr`
+```
+mkdir build; cd build; \
+cmake \
+    -DCMAKE_TOOLCHAIN_FILE=$HOME/AppData/Local/Android/Sdk/ndk-bundle/build/cmake/android.toolchain.cmake \
+    -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=29 -DANDROID_BUILD_TOOLS_VERSION=29.0.0 \
+    -DJAVA_HOME="C:/Program Files/Android/Android Studio/jre" \
+    -DKEYSTORE=~/.key
+    -DKEYSTORE_PASS=pass:1234
+    -DKEY_PASS=pass:1234
+    -DCMAKE_BUILD_TYPE=Debug -G "Unix Makefiles" ..`
+```
 
 #### MacOS
 
 - Xcode (or at least commandline developer tools)
 
-1. `mkdir build; cd build; cmake -DCMAKE_TOOLCHAIN_FILE=$HOME/Library/Android/Sdk/ndk-bundle/build/cmake/android.toolchain.cmake -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=29 -DANDROID_BUILD_TOOLS_VERSION=29.0.0 -G "Unix Makefiles" ..`
+```
+mkdir build; cd build; 
+cmake \
+    -DCMAKE_TOOLCHAIN_FILE=$HOME/Library/Android/Sdk/ndk-bundle/build/cmake/android.toolchain.cmake \
+    -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=29 -DANDROID_BUILD_TOOLS_VERSION=29.0.0 \
+    -DKEYSTORE=~/.key
+    -DKEYSTORE_PASS=pass:1234
+    -DKEY_PASS=pass:1234
+    -G "Unix Makefiles" ..
+```
 
 ### Building
 
-1. `make MinimalAndroidVR`
+1. `make minimalvr`
 
 ### Deploying
 
-Make outputs a `MinimalAndroidVR.apk` file.  You can use `adb install MinimalAndroidVR.apk` to install it to the device.  I
+Make outputs a `minimal.apk` file.  You can use `adb install minimalvr.apk` to install it to the device.  I
 usually run the following command to build, install, and tail logs in one step:
 
 ```sh
-make MinimalAndroidVR && adb install -r MinimalAndroidVR.apk && adb logcat -s APP
+make minimalvr && adb install -r minimalvr.apk && adb logcat -s APP
 ```

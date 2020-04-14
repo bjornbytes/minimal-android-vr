@@ -8,9 +8,11 @@ include("add_apk.cmake")
 get_filename_component(ANDROID_SDK "${ANDROID_NDK}/.." ABSOLUTE)
 file(TO_CMAKE_PATH "${ANDROID_SDK}" ANDROID_SDK)
 set(ANDROID_GLUE "${ANDROID_NDK}/sources/android/native_app_glue")
-set(ANDROID_BUILD_TOOLS "${ANDROID_SDK}/build-tools/${ANDROID_BUILD_TOOLS_VERSION}/")
+set(ANDROID_BUILD_TOOLS "${ANDROID_SDK}/build-tools/${ANDROID_BUILD_TOOLS_VERSION}")
 set(ANDROID_DEX "${ANDROID_BUILD_TOOLS}/dx.bat")
 set(ANDROID_AAPT "${ANDROID_BUILD_TOOLS}/aapt")
+set(ANDROID_ZIPALIGN "${ANDROID_BUILD_TOOLS}/zipalign")
+set(ANDROID_APKSIGNER "${ANDROID_BUILD_TOOLS}/apksigner.bat")
 
 link_directories("deps/ovr_sdk_mobile/VrApi/Libs/Android/${ANDROID_ABI}/${CMAKE_BUILD_TYPE}")
 include_directories("deps/ovr_sdk_mobile/VrApi/Include" "${ANDROID_GLUE}")
@@ -24,4 +26,7 @@ add_apk(minimalvr
     RESOURCES
         $<TARGET_FILE:app>
     INCLUDE_JARS "${ANDROID_SDK}/platforms/android-${ANDROID_PLATFORM}/android.jar"
+    KEYSTORE ${KEYSTORE}
+    KEYSTORE_PASS ${KEYSTORE_PASS}
+    KEY_PASS ${KEY_PASS}
 )
