@@ -1,0 +1,3 @@
+[submodule "deps/ovr_sdk_mobile"]
+	path = deps/ovr_sdk_mobile
+	url = https://github.com/alloverse/ovr_sdk_mobile.git
