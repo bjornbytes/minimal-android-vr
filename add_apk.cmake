@@ -76,18 +76,21 @@ function(add_apk _TARGET_NAME)
     # Create unaligned apk
     add_custom_command(
         OUTPUT ${_APK_BUILD_DIR}/${_TARGET_NAME}.unaligned.apk
+        COMMAND ${CMAKE_COMMAND} -E make_directory
+            ${_APK_STAGE}/lib/${ANDROID_ABI}
         COMMAND ${CMAKE_COMMAND} -E copy
-            ${_add_apk_RESOURCES} ${_APK_STAGE}
+            ${_add_apk_RESOURCES} ${_APK_STAGE}/lib/${ANDROID_ABI}/
         COMMAND ${ANDROID_AAPT} 
             package
-            -M ${CMAKE_CURRENT_SOURCE_DIR}/${_add_apk_MANIFEST}
+            -M ${_add_apk_MANIFEST}
             -I ${_add_apk_INCLUDE_JARS}
             -F ${_APK_BUILD_DIR}/${_TARGET_NAME}.unaligned.apk
         COMMAND ${ANDROID_AAPT} 
             add
             -f ${_APK_BUILD_DIR}/${_TARGET_NAME}.unaligned.apk
-            classes.dex
-            libapp.so
+            "classes.dex"
+            "lib/${ANDROID_ABI}/libapp.so"
+            "lib/${ANDROID_ABI}/libvrapi.so"
         DEPENDS ${_APK_STAGE}/classes.dex
         WORKING_DIRECTORY ${_APK_STAGE}
         COMMENT "Packaging unaligned APK for ${_TARGET_NAME}.apk"

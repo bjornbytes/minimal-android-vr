@@ -22,10 +22,13 @@ target_link_libraries(app android vrapi log GLESv3 egl)
 add_apk(minimalvr
     SOURCES
         "org/lovr/mini/LoadLibraries.java"
-    MANIFEST "AndroidManifest.xml"
+    MANIFEST 
+        "${CMAKE_CURRENT_SOURCE_DIR}/AndroidManifest.xml"
     RESOURCES
         $<TARGET_FILE:app>
-    INCLUDE_JARS "${ANDROID_SDK}/platforms/android-${ANDROID_PLATFORM}/android.jar"
+        "${CMAKE_CURRENT_SOURCE_DIR}/deps/ovr_sdk_mobile/VrApi/Libs/Android/${ANDROID_ABI}/${CMAKE_BUILD_TYPE}/libvrapi.so"
+    INCLUDE_JARS 
+        "${ANDROID_SDK}/platforms/android-${ANDROID_PLATFORM}/android.jar"
     KEYSTORE ${KEYSTORE}
     KEYSTORE_PASS ${KEYSTORE_PASS}
     KEY_PASS ${KEY_PASS}
